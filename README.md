@@ -23,3 +23,4 @@ In practice, one has to chose which embedding model (FastText, Glove, Transforme
 + saves annotation 
 + usable to train simpler models (lower model extension costs/time)
 + cheaply produce that last 5% performance increase for customers :smirk:
++ MoRTy [is not a Muppet](https://en.wikipedia.org/wiki/Morty_Smith) 
