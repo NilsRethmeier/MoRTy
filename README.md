@@ -4,11 +4,38 @@ MoRTy is a simple baseline method for **zero-shot domain adaptation** of embeddi
 ### Problems
 In practice, one has to chose which embedding model (FastText, Glove, TransformerX) is optimal for a task. While most pre-training methods like BERT are optimized for *'high-pretraining-resource'* domains, they can not be directly applied to *'low-pre-training resource settings'* and incure substantial training costs. In practice, using a Multi-GPU model to fine tune on a sub 10 MB supervision task can seem counterintuitive and affords preparation and maintanance costs, which limits scalability of future use cases or during deployment.  
 
-### Acronym and architecture
-**M**enu **o**f **r**econstructing **t**ransformations **y**ields domain (*de-*)adapted embeddings
+### Acronym and architecture, code
+<p align="center">
+<b>M</b>enu <b>o</b>f <b>r</b>econstructing <b>t</b>ransformations <b>y</b>ields domain (<i>de-</i>)adapted embeddings
+  </p>
 <p align="center">
   <img src="morty.png" width="700">
 </p>
+
+``` python
+# See parameter settings in #Recipe section below or in MoRTy.py example (pc=OrderedDict ...)
+class SparseOverCompleteAutoEncoder(torch.nn.Module):
+    """ A sparse L1 autoencoder, that retrofits embeddings that are of the same (complete AE)
+        or larger (overcomplete AE) dimension than the original embeddings.
+    """
+    def __init__(self, emb_dim, hidden_size, bias=True):
+        super(SparseOverCompleteAutoEncoder, self).__init__()
+        self.lin_encoder = nn.Linear(emb_dim, hidden_size, bias=bias) # no bias works too
+        self.lin_decoder = nn.Linear(hidden_size, emb_dim, bias=bias)
+        self.feature_size = emb_dim
+        self.hidden_size = hidden_size
+        self.l1weight = params['l1'] # had little effect on SUM-of-18-tasks performance
+        self.act = params['activation'] # linear was best for SUM-of-18-tasks score
+
+    def forward(self, input):
+        r = self.act(self.lin_encoder(input))
+        if self.l1weight is not None: # sparsity penalty
+            x_ = self.lin_decoder(L1Penalty.apply(r, self.l1weight))
+        else:
+            x_ = self.lin_decoder(r) # no sparsity penalty
+        # x_ for training via loss, r are the new/retrofit embeddings after training (1-epoch)
+        return x_, r  
+```
 
 ### Recipe: :stew:
 1. **pre-train**/ download **embeddings** `E_org` (using FastText is recommended for out-of-vocabulary abilities)
