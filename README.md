@@ -4,7 +4,7 @@ MoRTy is a simple baseline method for **zero-shot domain adaptation** of embeddi
 ### Problems
 In practice, one has to chose which embedding model (FastText, Glove, TransformerX) is optimal for a task. While most pre-training methods like BERT are optimized for *'high-pretraining-resource'* domains, they can not be directly applied to *'low-pre-training resource settings'* and incure substantial training costs. In practice, using a Multi-GPU model to fine tune on a sub 10 MB supervision task can seem counterintuitive and affords preparation and maintanance costs, which limits scalability of future use cases or during deployment.  
 
-### Acronym and architecture, code
+### Acronym and architecture, model-code
 <p align="center">
 <b>M</b>enu <b>o</b>f <b>r</b>econstructing <b>t</b>ransformations <b>y</b>ields domain (<i>de-</i>)adapted embeddings
   </p>
