@@ -57,6 +57,16 @@ class SparseOverCompleteAutoEncoder(torch.nn.Module):
 # Usage :wrench:
 + `MoRTy.py` contains example code that takes a .vec file (e.g. `data/wikitext2_FastText_SG0.vec` in `#word\tembedding_values format`) of FastText or GloVe pretrained embeddings and produces new autoencoded versions of those embeddings. The parameters in the `pc`can be adjusted. Though the script supports hyper parameter exploration via extending the value list in the `pc` object, this should not be neccessary.
 
+# Dependencies
+```
+python          3.6 # due to word embedding benchmark
+pandas          0.25.0
+scikit-learn    0.21.2
+pytorch         0.4.1
+tdqm            4.32.1
+```
+requirements.txt for the rest
+
 # Paper and bibtex Reference :scroll:
 [MoRTy: Unsupervised Learning of Task-specialized Word Embeddings
 by Autoencoding](https://www.aclweb.org/anthology/W19-4307), Nils Rethmeier, Barbara Plank, Repl4NLP@ACL, Italy, 2019 
