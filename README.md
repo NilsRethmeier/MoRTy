@@ -56,7 +56,7 @@ class SparseOverCompleteAutoEncoder(torch.nn.Module):
 
 # Usage :wrench:
 `MoRTy.py` contains example code that takes a .vec file (e.g. `data/wikitext2_FastText_SG0.vec` in `#word\tembedding_values format`) of FastText or GloVe pretrained embeddings and produces new autoencoded versions of those embeddings. The parameters in the `pc` dictionary can be adjusted. Though the script supports hyper parameter exploration via extending the value list in the `pc` object, this should not be neccessary. </br>
-*Note:* To reproduce the papers 1-epoch results (below) MoRTy was trained for 1-epoch using the scripts defaults settings. Blue is FastText embedding baseline performance = 100% for 5x FastText baselines per corpus size. On each baseline 3 MoRTy were trained for 1 epoch.
+*Note:* To reproduce the papers 1-epoch results (below) MoRTy was trained for 1-epoch using the scripts defaults settings. Blue is FastText embedding baseline performance = 100% for 5x FastText baselines per corpus size. On each baseline 3 MoRTy (red, yellow, green) were trained for 1 epoch. 
 <p align="center">
   <img src="1epoch.png" width="490">
 </p>
