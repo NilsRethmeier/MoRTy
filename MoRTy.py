@@ -238,6 +238,7 @@ def run_MoRTy_to_produce_specialized_embeddings(param_space):
                 store_embeddings(path=RT + '.morty.dict_pkl', vocab=vocab, embs=new_embeddings)
 
 if __name__ == "__main__":
+    # parameter setting or exploration for MoRTy
     pc = OrderedDict([('model', [SparseAutoEncoder]),
                       ('embs', ['data/wikitext2_FastText_SG0.vec'],
                                 # 'data/wikitext103_FastText_SG0.vec']# your original embedding
@@ -258,6 +259,3 @@ if __name__ == "__main__":
                     ])
     # produce MoRTy versions
     run_MoRTy_to_produce_specialized_embeddings(pc)
-
-
-#%%
