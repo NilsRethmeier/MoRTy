@@ -78,10 +78,9 @@ by Autoencoding](https://www.aclweb.org/anthology/W19-4307), Nils Rethmeier, Bar
 ```
 @inproceedings{rethmeier-plank-2019-morty,
     title = "{M}o{RT}y: Unsupervised Learning of Task-specialized Word Embeddings by Autoencoding",
-    author = "Rethmeier, Nils  and
-      Plank, Barbara",
+    author = "Rethmeier, Nils  and  Plank, Barbara",
     booktitle = "Proceedings of the 4th Workshop on Representation Learning for NLP (RepL4NLP-2019)",
-    month = aug,
+    month = "august",
     year = "2019",
     address = "Florence, Italy",
     publisher = "Association for Computational Linguistics",
