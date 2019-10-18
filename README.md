@@ -52,7 +52,7 @@ class SparseOverCompleteAutoEncoder(torch.nn.Module):
 + saves annotation 
 + usable to train simpler models (lower model extension costs/time)
 + cheaply produce that last 5% performance increase for customers :smirk:
-+ MoRTy [is not a Muppet](https://en.wikipedia.org/wiki/Morty_Smith) 
++ [MoRTy](https://en.wikipedia.org/wiki/Morty_Smith) is not a Muppet
 
 # Usage :wrench:
 `MoRTy.py` contains example code that takes a .vec file (e.g. `data/wikitext2_FastText_SG0.vec` in `#word\tembedding_values format`) of FastText or GloVe pretrained embeddings and produces new autoencoded versions of those embeddings. The parameters in the `pc` dictionary can be adjusted. Though the script supports hyper parameter exploration via extending the value list in the `pc` object, this should not be neccessary. </br>
@@ -78,10 +78,9 @@ by Autoencoding](https://www.aclweb.org/anthology/W19-4307), Nils Rethmeier, Bar
 ```
 @inproceedings{rethmeier-plank-2019-morty,
     title = "{M}o{RT}y: Unsupervised Learning of Task-specialized Word Embeddings by Autoencoding",
-    author = "Rethmeier, Nils  and
-      Plank, Barbara",
+    author = "Rethmeier, Nils  and  Plank, Barbara",
     booktitle = "Proceedings of the 4th Workshop on Representation Learning for NLP (RepL4NLP-2019)",
-    month = aug,
+    month = "august",
     year = "2019",
     address = "Florence, Italy",
     publisher = "Association for Computational Linguistics",
