@@ -159,14 +159,22 @@ def filter_on_metric(scores, metric_we_care_about=''):
     #FIXME: define a sensible condition here. E.g. fires when a new max score is reached
     return True # makes no sense atm. == Placeholder
 
-def store_embeddings(path='MoRTy_embedding.pkl', vocab=None, embs=None):
+def store_embeddings(path='MoRTy_embedding.', vocab=None, embs=None, store_as='.vec'):
     print(path)
-    with open(path,'wb') as f:
-        # vocab and embeddings are list and array, with the same sequence order
-        # vocab[2] => embs[2]
-        if vocab == None or embs == None:
-            raise Exception("empty data dump")
-        pickle.dump({'vocab':vocab, 'embeddings':embs}, f)
+    # vocab and embeddings are list and array, with the same sequence order
+    # vocab[2] => embs[2]
+    if vocab == None or embs == None:
+        raise Exception("empty data dump")
+    if store_as == '.pickle':
+        with open(path+store_as,'wb') as f:
+            pickle.dump({'vocab':vocab, 'embeddings':embs}, f)
+    elif store_as == '.vec':
+        with open(path+store_as,'w') as f:
+            f.write(str(len(embs)) + ' ' + str(len(embs[vocab[0]])) + '\n') # header
+            for token, emb in embs.items():
+                f.write(token + ' ' + ' '.join(str(x_i) for x_i in emb) + '\n')
+    else:
+        raise Exception('embedding output format not recognized')
 
 def loaded_embeddings(path='MoRTy_embedding.pkl', as_dict=False):
     """ Return vocab embedding dict. Vocab and and embeddings are mapped by
@@ -210,7 +218,7 @@ def run_MoRTy_to_produce_specialized_embeddings(param_space):
             print("WARNING: running on CPUs")
         optimizer = get_optimizer(pc, model) # torch.optim.SGD(model.parameters(), lr=0.1, momentum=0.9)
         optimizer.zero_grad()
-        for RT in num_morties_to_create(num_morties=2, epochs=pc['epochs'], original_embeddings_path=pc['embs']):
+        for RT in num_morties_to_create(num_morties=7, epochs=pc['epochs'], original_embeddings_path=pc['embs']):
             for batch in give_words_batch(train_embs, pc['batch_size']):
                 x_b = torch.tensor(batch, requires_grad=False, device=device, dtype=ptdtype)
                 pred, _ = model.forward(x_b)
@@ -235,24 +243,25 @@ def run_MoRTy_to_produce_specialized_embeddings(param_space):
             # store the best RT embedding according to a proxy measure OR
             # store k MoRTy to select the optimal RT via a downstream tasks dev set
             if filter_on_metric:
-                store_embeddings(path=RT + '.morty.dict_pkl', vocab=vocab, embs=new_embeddings)
+                store_embeddings(path=RT + '.morty', vocab=vocab, embs=new_embeddings)
 
 if __name__ == "__main__":
     # parameter setting or exploration for MoRTy
     pc = OrderedDict([('model', [SparseAutoEncoder]),
-                      ('embs', ['data/wikitext2_FastText_SG0.vec'],
+                      ('embs', ['data/mimicIII_hours_4dem_in-hospital-mortality_train.json.verlaeufe.txt.40d.Fasttext.vec',
+								'data/mimicIII_hours_4dem_in-hospital-mortality_train.json.laborwerte.txt.40d.Fasttext.vec'],
                                 # 'data/wikitext103_FastText_SG0.vec']# your original embedding
                                 ),
                        ('vocab_size', ['added_on_the_fly']),
                        ('batch_size', [128]), #
                        ('activation', [linear]), # relu1, F.sigmoid
-                       ('epochs', [1]), # e.g. 5 can 5 new RT embeddings (1 per epoch)
+                       ('epochs', [4]), # e.g. 5 can 5 new RT embeddings (1 per epoch)
                        ('train_frac', [.999]), # to see hold out/ dev loss -- not needed
                        ('l1', [None]), # 0.05, 0.001, 0.5
                        ('reduce', [torch.mean]), # or torch.sum: did not matter
                        ('emb_d', ['added_on_the_fly']), # added by code
                        ('loss', [RMSE]), # MSE works similarly well (faster)
-                       ('rep_dim', [100]), # overcomplete gives some boost
+                       ('rep_dim', [40]), # overcomplete gives some boost
                        # {"obj":torch.optim.SGD, "params":{"momentum":0.9}}])
                        ('optim', [{"obj":torch.optim.Adam, "params":{"eps":1e-08}}]),
                        ('lr', [2e-02]) # ~ same as original (if annealed then ~1/2)
