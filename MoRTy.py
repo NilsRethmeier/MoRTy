@@ -153,7 +153,7 @@ def num_morties_to_create(num_morties, epochs=1, original_embeddings_path="/tmp"
         @param: epoch, creates one subvariation of the random transformation per epoch
         @param: creates a new path name for every variation
     """
-    return [original_embeddings_path + 'epoch:' + str(e) + 'rand:' + str(random_init) for random_init in range(3) for e in range(5)]
+    return [original_embeddings_path + 'epoch:' + str(e) + 'rand:' + str(random_init) for random_init in range(num_morties) for e in range(epochs)]
 
 def filter_on_metric(scores, metric_we_care_about=''):
     #FIXME: define a sensible condition here. E.g. fires when a new max score is reached
@@ -193,7 +193,7 @@ def parameter_combos_generator(param_lists_dict):
     return (dict(zip(param_lists_dict, x)) for x in itertools.product(*param_lists_dict.values()))
 
 ## parameter setting
-def run_MoRTy_to_produce_specialized_embeddings(param_space):
+def run_MoRTy_to_produce_specialized_embeddings(param_space, evaluate_word_embs=False):
     LLE = LazyLoadEmbeddings() # lazy embedding loader if used for multiple 'embs'
 
     ptdtype = torch.float
@@ -238,8 +238,9 @@ def run_MoRTy_to_produce_specialized_embeddings(param_space):
             new_embeddings = dict(zip(vocab, representations))
 
             #DONE: evlauate results
-            res = {k:v[0] for k, v in evaluate_on_all_no_logs(new_embeddings).to_dict().items()}
-            print(res)
+            if evaluate_word_embs:
+                res = {k:v[0] for k, v in evaluate_on_all_no_logs(new_embeddings).to_dict().items()}
+                print(res)
             # store the best RT embedding according to a proxy measure OR
             # store k MoRTy to select the optimal RT via a downstream tasks dev set
             if filter_on_metric:
@@ -248,8 +249,7 @@ def run_MoRTy_to_produce_specialized_embeddings(param_space):
 if __name__ == "__main__":
     # parameter setting or exploration for MoRTy
     pc = OrderedDict([('model', [SparseAutoEncoder]),
-                      ('embs', ['data/mimicIII_hours_4dem_in-hospital-mortality_train.json.verlaeufe.txt.40d.Fasttext.vec',
-								'data/mimicIII_hours_4dem_in-hospital-mortality_train.json.laborwerte.txt.40d.Fasttext.vec'],
+                      ('embs', ['data/wikitext2_FastText_SG0.vec'],
                                 # 'data/wikitext103_FastText_SG0.vec']# your original embedding
                                 ),
                        ('vocab_size', ['added_on_the_fly']),
