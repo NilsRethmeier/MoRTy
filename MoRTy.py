@@ -267,4 +267,4 @@ if __name__ == "__main__":
                        ('lr', [2e-02]) # ~ same as original (if annealed then ~1/2)
                     ])
     # produce MoRTy versions
-    run_MoRTy_to_produce_specialized_embeddings(pc)
+    run_MoRTy_to_produce_specialized_embeddings(pc, evaluate_word_embs=False)
